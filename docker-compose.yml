@@ -1,0 +1,26 @@
+version: '3'
+services:
+  php:
+    image: php:7.4-fpm
+    environment:
+      PHP_FPM_LISTEN: 0.0.0.0:9000
+    volumes:
+    - /home/evgen/docker-compose:/var/local/sandboxes/dev/www
+
+  nginx:
+    image: nginx
+    ports:
+    - '1243:3000'
+    depends_on:
+      php:
+        condition: service_started
+    volumes:
+    - ./default.conf:/etc/nginx/default.conf
+    restart: always	
+
+networks:
+  vita:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
